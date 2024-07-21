@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Prediction</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .navbar-custom {
+            background-color: #060606;
+            position: fixed; /* Fixed position */
+            top: 0;
+            width: 100%;
+            z-index: 1000; 
+        }
+        .navbar-custom .navbar-brand,
+        .navbar-custom .navbar-nav .nav-link {
+            color: #ffffff;
+        }
+        .menu-container {
+            margin-bottom: 10px;
+        }
+        .menu-link {
+            transition: color 0.3s ease;
+        }
+        .menu-link:hover {
+            color: #00aaff;
+        }
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        /* Background Image */
+        body {
+            background-image: url('{{ url_for('static', filename='images/heart_bg.jpg') }}');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+        <a class="navbar-brand" href="#">Heart Disease Prediction</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="/about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="/contact">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4 menu-container">
+        <h1 class="text-4xl font-bold text-center mt-5 mb-10 text-white">Heart Disease Prediction</h1>
+        <div class="max-w-lg mx-auto form-container">
+            <form action="/predict" method="post" class="space-y-4" id="prediction-form">
+                <div class="form-group">
+                    <label for="Age" class="block text-gray-700">Age:</label>
+                    <input type="text" class="form-control border-2 border-gray-300 p-2 w-full" id="Age" name="Age" required>
+                </div>
+                <div class="form-group">
+                    <label for="Sex" class="block text-gray-700">Sex (1 = male, 0 = female):</label>
+                    <input type="text" class="form-control border-2 border-gray-300 p-2 w-full" id="Sex" name="Sex" required>
+                </div>
+                <div class="form-group">
+                    <label for="ChestPain" class="block text-gray-700">Chest Pain Type (typical:0, asymptomatic: 1, nonanginal: 2, nontypical: 3):</label>
+                    <input type="text" class="form-control border-2 border-gray-300 p-2 w-full" id="ChestPain" name="ChestPain" required>
+                </div>
+                <div class="form-group">
+                    <label for="RestBP" class="block text-gray-700">Resting Blood Pressure:</label>
+                    <input type="text" class="form-control border-2 border-gray-300 p-2 w-full" id="RestBP" name="RestBP" required>
+                </div>
+                <div class="form-group">
+                    <label for="Chol" class="block text-gray-700">Cholesterol:</label>
+                    <input type="text" class="form-control border-2 border-gray-300 p-2 w-full" id="Chol" name="Chol" required>
+                </div>
+                <div class="form-group">
+                    <label for="Fbs" class="block text-gray-700">Fasting Blood Sugar (1 = true, 0 = false):</label>
+                    <input type="text" class="form-control border-2 border-gray-300 p-2 w-full" id="Fbs" name="Fbs" required>
+                </div>
+                <div class="form-group">
+                    <label for="RestECG" class="block text-gray-700">Resting ECG Results (0-2):</label>
+                    <input type="text" class="form-control border-2 border-gray-300 p-2 w-full" id="RestECG" name="RestECG" required>
+                </div>
+                <div class="form-group">
+                    <label for="MaxHR" class="block text-gray-700">Max Heart Rate Achieved:</label>
+                    <input type="text" class="form-control border-2 border-gray-300 p-2 w-full" id="MaxHR" name="MaxHR" required>
+                </div>
+                <div class="form-group">
+                    <label for="ExAng" class="block text-gray-700">Exercise Induced Angina (1 = yes, 0 = no):</label>
+                    <input type="text" class="form-control border-2 border-gray-300 p-2 w-full" id="ExAng" name="ExAng" required>
+                </div>
+                <div class="form-group">
+                    <label for="Oldpeak" class="block text-gray-700">Oldpeak:</label>
+                    <input type="text" class="form-control border-2 border-gray-300 p-2 w-full" id="Oldpeak" name="Oldpeak" required>
+                </div>
+                <div class="form-group">
+                    <label for="Slope" class="block text-gray-700">Slope (0-2):</label>
+                    <input type="text" class="form-control border-2 border-gray-300 p-2 w-full" id="Slope" name="Slope" required>
+                </div>
+                <div class="form-group">
+                    <label for="Ca" class="block text-gray-700">CA (0-4):</label>
+                    <input type="text" class="form-control border-2 border-gray-300 p-2 w-full" id="Ca" name="Ca" required>
+                </div>
+                <div class="form-group">
+                    <label for="Thal" class="block text-gray-700">Thal (1 = fixed, 2 = normal, 3 = reversible):</label>
+                    <input type="text" class="form-control border-2 border-gray-300 p-2 w-full" id="Thal" name="Thal" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-full py-2">Predict</button>
+            </form>
+            <h2 class="mt-4 text-center text-xl" id="prediction-result">{{ prediction_text }}</h2>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
